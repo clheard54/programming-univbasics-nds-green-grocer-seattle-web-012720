@@ -33,14 +33,13 @@ def consolidate_cart(collection)
 end
 
 def apply_coupons(cart, coupons)
-  consolidated_cart = consolidate_cart(cart)
   coupon_index= 0
   while coupon_index < coupons.length do
-    cart_item = find_item_by_name_in_collection(coupons[coupon_index][:item], consolidated_cart)
+    cart_item = find_item_by_name_in_collection(coupons[coupon_index][:item], cart)
     couponed_item_name = "#{coupons[coupon_index][:item]} W/COUPON"
-    cart_item_with_coupon = find_item_by_name_in_collection(couponed_item_name, consolidated_cart)
-    if cart_item && cart_item[:count] >= coupons[coupon_index][:num]
-      if cart_item_with_coupon
+    cart_item_with_coupon = find_item_by_name_in_collection(couponed_item_name, cart)
+    if cart_item && (cart_item[:count] >= coupons[coupon_index][:num])
+      if cart_item_with_coupon != nil
         cart_item_with_coupon[:count] += coupons[coupon_index][:num]
         cart_item[:count] -= coupons[coupon_index][:num]
       else 
@@ -50,13 +49,13 @@ def apply_coupons(cart, coupons)
           :count => coupons[coupon_index][:num],
           :clearance => cart_item[:clearance]
         }
-        consolidated_cart << cart_item_with_coupon
+        cart << cart_item_with_coupon
         cart_item[:count] -= coupons[coupon_index][:num]
       end
     end
     coupon_index += 1
   end
-  consolidated_cart
+  cart
 end
 
 
