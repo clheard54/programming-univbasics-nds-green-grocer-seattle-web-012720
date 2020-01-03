@@ -11,23 +11,25 @@ cart_index = 0
 end
 
 def consolidate_cart(collection)
-  receipt_items = []
+  new_cart = []
   index = 0
   while index < collection.length do
     count = 0
-    collection.each {|thing|
-      if collection[index][:item] == thing[:item]
-        count +=1
-      end
-    }
-    collection[index][:count]= count
-    if !receipt_items.include?(collection[index])
-      puts collection[index][:count]
-      receipt_items << collection[index]
+    new_cart_item = find_item_by_name_in_collection(collection[index][:item], new_cart)
+    if new_cart_item
+      new_cart_item[:count] += 1
+    else
+      new_cart_item = {
+        :item => collection[index][:item],
+        :price => collection[index][:price],
+        :clearance => collection[index][:clearance],
+        :count => 1
+      }
+      new_cart << new_cart_item
     end
-    index+=1
+    index += 1
   end
-  receipt_items
+  new_cart
 end
 
 def apply_coupons(cart, coupons)
