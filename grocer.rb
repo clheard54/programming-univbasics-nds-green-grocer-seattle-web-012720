@@ -60,20 +60,17 @@ end
 
 
 def apply_clearance(cart)
-  updated_cart = consolidate_cart(cart)
-  #loop through updated_cart
   index = 0
-  while index < updated_cart.length do
-    if updated_cart[index][:clearance]
-      new_price = (0.8)*updated_cart[index][:price]
+  while index < cart.length do
+    if cart[index][:clearance]
+      new_price = (0.8)*cart[index][:price]
       new_price = new_price.round(2)
-      updated_cart[index][:price] = new_price
+      cart[index][:price] = new_price
     end
     index+=1
   end
-  updated_cart
+  cart
 end
-
 
 def checkout(cart, coupons)
   remove_duplicates = consolidate_cart(cart)
