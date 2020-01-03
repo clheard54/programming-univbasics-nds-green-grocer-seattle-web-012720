@@ -1,8 +1,8 @@
-def find_item_by_name_in_collection(name, collection)
+def find_item_by_name_in_collection(name, cart)
 cart_index = 0
-  while cart_index < collection.length do
-    if collection[cart_index][:item].downcase === name.downcase
-      return collection[cart_index]
+  while cart_index < cart.length do
+    if cart[cart_index][:item].downcase === name.downcase
+      return cart[cart_index]
     else
       cart_index +=1
     end
