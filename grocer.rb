@@ -76,6 +76,8 @@ def checkout(cart, coupons)
   remove_duplicates = consolidate_cart(cart)
   use_coupons = apply_coupons(remove_duplicates, coupons)
   final_cart = apply_clearance(use_coupons)
+  puts final_cart
+
   grand_total = 0
   item_index = 0
   while item_index < final_cart.length do
