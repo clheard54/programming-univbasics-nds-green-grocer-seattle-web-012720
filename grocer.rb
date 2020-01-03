@@ -30,38 +30,31 @@ def consolidate_cart(collection)
   receipt_items
 end
 
-def apply_coupons(test_cart, coupons)
-  test_cart = consolidate_cart(test_cart)
-  #loop thru coupons
-  coupon_index = 0
+def apply_coupons(cart, coupons)
+  consolidated_cart = consolidate_cart(cart)
+  coupon_index= 0
   while coupon_index < coupons.length do
-    #loop through test_cart
-    cart_index = 0
-    while cart_index < test_cart.length do
-      #compare coupons[coupon_index][:item] to each item in test_cart
-      #2 cases:
-      if coupons[coupon_index][:item] == test_cart[cart_index][:item]
-        count_discounted = 0
-        if test_cart[cart_index][:count] >= coupons[coupon_index][:num]
-          while test_cart[cart_index][:count] >= coupons[coupon_index][:num] do 
-            test_cart[cart_index][:count] -= coupons[coupon_index][:num]
-           count_discounted += coupons[coupon_index][:num]
-            cost_per = coupons[coupon_index][:cost]/coupons[coupon_index][:num].round(2)
-          end
-          coupon_hash = {
-           :item => "#{test_cart[cart_index][:item]} W/COUPON",
-           :price => cost_per,
-           :clearance => test_cart[cart_index][:clearance],
-           :count => count_discounted
-           }
-          test_cart << coupon_hash
-        end
+    cart_item = find_item_by_name_in_collection(coupons[coupon_index][:item], consolidated_cart)
+    couponed_item_name = "#{coupons[coupon_index][:item]} W/COUPON"
+    cart_item_with_coupon = find_item_by_name_in_collection(couponed_item_name, consolidated_cart)
+    if cart_item && cart_item[:count] >= coupons[coupon_index][:num]
+      if cart_item_with_coupon
+        cart_item_with_coupon[:count] += coupons[coupon_index][:num]
+        cart_item[:count] -= coupons[coupon_index][:num]
+      else 
+        cart_item_with_coupon = {
+          :item => couponed_item_name,
+          :price => coupons[coupon_index][:cost]/coupons[coupon_index][:num].round(2),
+          :count => coupons[coupon_index][:num],
+          :clearance => cart_item[:clearance]
+        }
+        consolidated_cart << cart_item_with_coupon
+        cart_item[:count] -= coupons[coupon_index][:num]
       end
-    cart_index +=1 
     end
-  coupon_index +=1 
+    coupon_index += 1
   end
-  return test_cart
+  consolidated_cart
 end
 
 
